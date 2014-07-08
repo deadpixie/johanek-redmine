@@ -30,17 +30,20 @@ class redmine::install {
     command => "wget ${redmine::params::download_url}",
     creates => "/usr/src/redmine-${redmine::version}.tar.gz",
     require => Package['wget'],
+    timeout => 0,
   } ->
 
   exec { 'extract_redmine':
     command => "/bin/tar xvzf redmine-${redmine::version}.tar.gz",
     creates => "/usr/src/redmine-${redmine::version}",
     require => Package['tar'],
+     timeout => 0,
   } ->
 
   exec { 'bundle_redmine':
-    command => "bundle install --gemfile /usr/src/redmine-${redmine::version}/Gemfile --without development test postgresql sqlite && touch .bundle_done",
+    command => "bundle install --gemfile /usr/src/redmine-${redmine::version}/Gemfile --without development test sqlite && touch .bundle_done",
     creates => "/usr/src/redmine-${redmine::version}/.bundle_done",
     require => [ Package['bundler'], Package['make'], Package['gcc'] ],
+    timeout => 0,
   }
 }
