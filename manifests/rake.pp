@@ -16,14 +16,14 @@ class redmine::rake {
 
   # Perform rails migrations
   exec { 'rails_migrations':
-    command => '/usr/bin/rake db:migrate && /bin/touch .migrate',
+    command => 'bundle exec /usr/bin/rake db:migrate && /bin/touch .migrate',
     creates => "${redmine::webroot}/.migrate",
     notify  => Class['apache::service']
   }
 
   # Seed DB data
   exec { 'seed_db':
-    command => '/usr/bin/rake redmine:load_default_data && /bin/touch .seed',
+    command => 'bundle exec /usr/bin/rake redmine:load_default_data && /bin/touch .seed',
     creates => "${redmine::webroot}/.seed",
     notify  => Class['apache::service'],
     require => Exec['rails_migrations']
